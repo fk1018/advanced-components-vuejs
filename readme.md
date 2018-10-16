@@ -15,3 +15,6 @@
 - How to create render functions
 - How to use functional components
 - The mounting process
+- Learn vue design patterns
+- Learn about watchers
+- Learn about dep class
