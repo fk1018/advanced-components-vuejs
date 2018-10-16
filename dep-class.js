@@ -11,7 +11,7 @@ let target = () => {
 };
 
 class Dep {
-  constructor() {
+  letructor() {
     this.subscribers = [];
   }
 
@@ -26,19 +26,26 @@ class Dep {
   }
 }
 
+let deps = new Map();
+
+
 Object.keys(data).forEach((key) => {
-  let internalValue = data[key];
-  const dep = new Dep();
-  Object.defineProperty(data, key, {
-    get() {
-      dep.depend();
-      return internalValue;
-    },
-    set(newVal) {
-      internalValue = newVal;
-      dep.notify();
-    },
-  });
+  deps.set(key, new Dep());
+});
+
+let dataWithoutProxy = data;
+
+data = new Proxy(dataWithoutProxy, {
+  get(obj, key) {
+    deps.get(key).depend();
+    return obj[key];
+  },
+  /* eslint no-param-reassign: "error" */
+  set(obj, key, newValue) {
+    obj[key] = newValue;
+    deps.get(key).notify();
+    return true;
+  },
 });
 
 function watcher(func) {
@@ -53,4 +60,13 @@ watcher(() => {
 
 watcher(() => {
   salePrice = data.price * 0.9;
+});
+
+deps.set(`discount`, new Dep());
+data.discount = 5;
+
+let discountPrice = 0;
+
+watcher(() => {
+  salePrice = data.price - data.discountPrice;
 });
