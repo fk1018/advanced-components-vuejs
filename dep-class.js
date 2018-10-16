@@ -1,10 +1,21 @@
-let price = 5;
-let quantity = 2;
+let data = {
+  price: 5,
+  quantity: 2,
+};
 let total = 0;
 
 let target = () => {
   total = price * quantity;
 };
+
+Object.defineProperty(data, `price`, {
+  get() {
+    return `I was accessed`;
+  },
+  set(newVal) {
+    console.log(`I was changed`);
+  },
+});
 
 class Dep {
   constructor() {
@@ -24,5 +35,11 @@ class Dep {
 
 const dep = new Dep();
 
-dep.depend();
-target();
+function watcher(func) {
+  target = func;
+  dep.depend();
+  target();
+  target = null;
+}
+
+watcher(target);

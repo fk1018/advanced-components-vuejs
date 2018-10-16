@@ -12,6 +12,11 @@
     "plugin:vue/recommended"
   ],
   "rules": {
-    "no-lonely-if": "off"
+    "no-lonely-if": "off",
+    "quotes": [
+      "error", 
+      "backtick",
+      { "allowTemplateLiterals": true }
+    ]
   }
 }
