@@ -1,6 +1,7 @@
 /* eslint no-param-reassign: "error" */
 /* eslint no-unused-vars: "off" */
 /* eslint prefer-const: "off" */
+
 let data = {
   price: 5,
   quantity: 2,
