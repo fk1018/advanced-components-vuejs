@@ -1,37 +1,34 @@
-/* eslint no-param-reassign: "error" */
-/* eslint no-unused-vars: "off" */
+/* eslint no-param-reassign: "off" */
 /* eslint prefer-const: "off" */
+/* eslint no-console: "off" */
 
 let data = {
   price: 5,
   quantity: 2,
 };
+let target = null;
 
-let total = 0;
-let salePrice = 0;
-
-let target = () => {
-  total = data.price * data.quantity;
-};
-
+// Our simple Dep class
 class Dep {
-  letructor() {
+  constructor() {
     this.subscribers = [];
   }
 
   depend() {
     if (target && !this.subscribers.includes(target)) {
+      // Only if there is a target & it's not already subscribed
       this.subscribers.push(target);
     }
   }
 
   notify() {
-    this.subscribers.forEach(run => run());
+    this.subscribers.forEach(sub => sub());
   }
 }
 
 let deps = new Map();
 
+// Go through each of our data properties
 Object.keys(data).forEach((key) => {
   deps.set(key, new Dep());
 });
@@ -43,32 +40,41 @@ data = new Proxy(dataWithoutProxy, {
     deps.get(key).depend();
     return obj[key];
   },
-  set(obj, key, newValue) {
-    obj[key] = newValue;
+  set(obj, key, newVal) {
+    obj[key] = newVal;
     deps.get(key).notify();
     return true;
   },
 });
 
-function watcher(func) {
-  target = func;
+// The code to watch to listen for reactive properties
+function watcher(myFunc) {
+  target = myFunc;
   target();
   target = null;
 }
+
+let total = 0;
 
 watcher(() => {
   total = data.price * data.quantity;
 });
 
-watcher(() => {
-  salePrice = data.price * 0.9;
-});
+console.log(`total = ${total}`);
+data.price = 20;
+console.log(`total = ${total}`);
+data.quantity = 10;
+console.log(`total = ${total}`);
 
 deps.set(`discount`, new Dep());
 data.discount = 5;
 
-let discountPrice = 0;
+let salePrice = 0;
 
 watcher(() => {
-  salePrice = data.price - data.discountPrice;
+  salePrice = data.price - data.discount;
 });
+
+console.log(`salePrice = ${salePrice}`);
+data.discount = 7.5;
+console.log(`salePrice = ${salePrice}`);
