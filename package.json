@@ -13,6 +13,7 @@
     "@babel/core": "^7.1.2",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",
+    "babel-preset-vue": "^2.0.2",
     "eslint": "^5.6.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
